@@ -1,0 +1,30 @@
+// 71. Simplify Path
+
+class Solution {
+    public String simplifyPath(String path) {
+        String[] parts = path.split("/");  // split by "/"
+        Stack<String> stack = new Stack<>();
+
+        for (String p : parts) {
+            if (p.equals("") || p.equals(".")) {
+                continue;                   // skip empty and "."
+            } 
+            else if (p.equals("..")) {
+                if (!stack.isEmpty()) {
+                    stack.pop();            // go back one folder
+                }
+            } 
+            else {
+                stack.push(p);              // valid folder, push
+            }
+        }
+
+        // Build the final simplified path
+        StringBuilder result = new StringBuilder();
+        for (String folder : stack) {
+            result.append("/").append(folder);
+        }
+
+        return result.length() == 0 ? "/" : result.toString();
+    }
+}
