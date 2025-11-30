@@ -1,0 +1,24 @@
+// 946. Validate Stack Sequences
+
+Given two integer arrays pushed and popped each with distinct values, 
+return true if this could have been the result of a sequence of push and pop operations on an initially empty stack, or false otherwise.
+
+class Solution {
+    public boolean validateStackSequences(int[] pushed, int[] popped) {
+        int[] stack = new int[pushed.length];   // simulate stack using array (faster)
+        int top = -1;                           // stack pointer
+        int j = 0;                              // pointer for popped array
+
+        for (int x : pushed) {
+            stack[++top] = x;                   // push
+
+            while (top >= 0 && stack[top] == popped[j]) {
+                top--;                          // pop
+                j++;                            // move in popped[]
+            }
+        }
+
+        return top == -1;                       // true if stack empty
+    }
+}
+
