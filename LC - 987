@@ -1,0 +1,59 @@
+// 987. Vertical Order Traversal of a Binary Tree
+
+Given the root of a binary tree, calculate the vertical order traversal of the binary tree.
+
+For each node at position (row, col), its left and right children will be at positions (row + 1, col - 1) and (row + 1, col + 1) respectively. The root of the tree is at (0, 0).
+
+The vertical order traversal of a binary tree is a list of top-to-bottom orderings for each column index starting from the leftmost column and ending on the rightmost column. There may be multiple nodes in the same row and same column. In such a case, sort these nodes by their values.
+
+Return the vertical order traversal of the binary tree.
+
+// CODE
+
+class Solution {
+    class Pair {
+        TreeNode node;
+        int row, col;
+        Pair(TreeNode n, int r, int c) {
+            node = n;
+            row = r;
+            col = c;
+        }
+    }
+
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        List<Pair> list = new ArrayList<>();
+        Queue<Pair> q = new LinkedList<>();
+
+        q.offer(new Pair(root, 0, 0));
+
+        while (!q.isEmpty()) {
+            Pair p = q.poll();
+            list.add(p);
+
+            if (p.node.left != null)
+                q.offer(new Pair(p.node.left, p.row + 1, p.col - 1));
+            if (p.node.right != null)
+                q.offer(new Pair(p.node.right, p.row + 1, p.col + 1));
+        }
+
+        Collections.sort(list, (a, b) -> {
+            if (a.col != b.col) return a.col - b.col;
+            if (a.row != b.row) return a.row - b.row;
+            return a.node.val - b.node.val;
+        });
+
+        List<List<Integer>> result = new ArrayList<>();
+        int prevCol = Integer.MIN_VALUE;
+
+        for (Pair p : list) {
+            if (p.col != prevCol) {
+                result.add(new ArrayList<>());
+                prevCol = p.col;
+            }
+            result.get(result.size() - 1).add(p.node.val);
+        }
+
+        return result;
+    }
+}
